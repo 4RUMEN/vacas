@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ciclo Estral da Fêmea Bovina - Interativo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h2 {
+            color: #2c3e50;
+        }
+        .phase, .concept {
+            background-color: #ecf0f1;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .phase h3, .concept h3 {
+            margin: 0;
+            color: #2980b9;
+        }
+        .details {
+            display: none;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        .details h4 {
+            margin-top: 10px;
+            margin-bottom: 5px;
+            color: #16a085;
+        }
+        #concept-section {
+            margin-top: 30px;
+        }
+        #concept-section > h3 {
+            color: #1abc9c;
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h2>Ciclo Estral da Fêmea Bovina - Interativo</h2>
+    <p>Clique em cada fase para ver mais detalhes.</p>
+
+    <div id="cycle-phases"></div>
+
+    <div id="concept-section">
+        <h3>Conceitos Importantes</h3>
+        <p>Clique em cada conceito para ver mais detalhes.</p>
+        <div id="concept-list"></div>
+    </div>
+
+    <script>
+    const cyclePhases = [
+        {
+            name: "Proestro (2-3 dias)",
+            dominantFollicle: "Crescimento rápido",
+            nonDominantFollicles: "Regressão",
+            corpoLuteo: "Regressão do corpo lúteo do ciclo anterior",
+            progesterona: "Níveis baixos, diminuindo (Corpo Lúteo)",
+            utero: "Aumento da vascularização e edema",
+            prostaglandina: "Aumento da produção de PGF2α (Endométrio)",
+            hormones: {
+                FSH: "Diminuindo (Hipófise Anterior)",
+                LH: "Aumentando (Hipófise Anterior)",
+                Estradiol: "Aumentando (Folículos Ovarianos)",
+                Progesterona: "Baixa (Corpo Lúteo)"
+            }
+        },
+        {
+            name: "Estro (12-18 horas)",
+            dominantFollicle: "Máximo desenvolvimento, pronto para ovulação",
+            nonDominantFollicles: "Atrofiados",
+            corpoLuteo: "Ausente",
+            progesterona: "Níveis muito baixos (Corpo Lúteo)",
+            utero: "Edema máximo, aumento de secreções",
+            prostaglandina: "Níveis baixos (Endométrio)",
+            hormones: {
+                FSH: "Baixo (Hipófise Anterior)",
+                LH: "Pico (Hipófise Anterior)",
+                Estradiol: "Pico (Folículos Ovarianos)",
+                Progesterona: "Muito baixa (Corpo Lúteo)"
+            }
+        },
+        {
+            name: "Metaestro (3-4 dias)",
+            dominantFollicle: "Ovulação e início da formação do corpo lúteo",
+            nonDominantFollicles: "Início de nova onda folicular",
+            corpoLuteo: "Formação inicial (corpo hemorrágico)",
+            progesterona: "Níveis começando a aumentar (Corpo Lúteo em formação)",
+            utero: "Diminuição do edema, início da fase secretória",
+            prostaglandina: "Níveis baixos (Endométrio)",
+            hormones: {
+                FSH: "Ligeiro aumento (Hipófise Anterior)",
+                LH: "Diminuindo (Hipófise Anterior)",
+                Estradiol: "Diminuindo (Folículos Ovarianos)",
+                Progesterona: "Começando a aumentar (Corpo Lúteo em formação)"
+            }
+        },
+        {
+            name: "Diestro (10-14 dias)",
+            dominantFollicle: "Desenvolvimento de novas ondas foliculares",
+            nonDominantFollicles: "Crescimento e atresia de folículos subordinados",
+            corpoLuteo: "Totalmente formado e funcional",
+            progesterona: "Níveis elevados (Corpo Lúteo)",
+            utero: "Fase secretória plena, preparação para possível gestação",
+            prostaglandina: "Aumento gradual no final do diestro (Endométrio, se não houver gestação)",
+            hormones: {
+                FSH: "Flutuações (Hipófise Anterior)",
+                LH: "Baixo (Hipófise Anterior)",
+                Estradiol: "Flutuações (Folículos Ovarianos)",
+                Progesterona: "Elevada (Corpo Lúteo)"
+            }
+        }
+    ];
+
+    const concepts = [
+        {
+            name: "Funções dos Hormônios",
+            details: `
+                <ul>
+                    <li><strong>FSH (Hormônio Folículo Estimulante):</strong> Estimula o crescimento e desenvolvimento dos folículos ovarianos.</li>
+                    <li><strong>LH (Hormônio Luteinizante):</strong> Induz a ovulação e a formação do corpo lúteo.</li>
+                    <li><strong>Estradiol:</strong> Promove o comportamento de cio, prepara o trato reprodutivo para a cópula e o transporte de espermatozoides.</li>
+                    <li><strong>Progesterona:</strong> Prepara o útero para a implantação do embrião e mantém a gestação.</li>
+                    <li><strong>Prostaglandina F2α (PGF2α):</strong> Induz a regressão do corpo lúteo (luteólise) se não houver gestação.</li>
+                </ul>
+            `
+        },
+        {
+            name: "Sistemas e Estruturas",
+            details: `
+                <ul>
+                    <li><strong>Hipófise Anterior:</strong> Secreta FSH e LH, controlando o ciclo ovariano.</li>
+                    <li><strong>Ovários:</strong> Produzem estradiol (folículos) e progesterona (corpo lúteo), além de liberar os óvulos.</li>
+                    <li><strong>Útero:</strong> Prepara-se para receber e nutrir o embrião; seu endométrio produz PGF2α.</li>
+                    <li><strong>Folículos Ovarianos:</strong> Desenvolvem-se em ondas, com um folículo dominante emergindo em cada onda.</li>
+                    <li><strong>Corpo Lúteo:</strong> Forma-se após a ovulação, produzindo progesterona para manter a possível gestação.</li>
+                </ul>
+            `
+        },
+        {
+            name: "Interações Chave",
+            details: `
+                <ul>
+                    <li>O aumento de estradiol induz o pico de LH, levando à ovulação.</li>
+                    <li>A progesterona do corpo lúteo inibe novos ciclos ovulatórios.</li>
+                    <li>Na ausência de gestação, a PGF2α do útero causa a regressão do corpo lúteo, iniciando um novo ciclo.</li>
+                </ul>
+            `
+        }
+    ];
+
+    function createPhaseElement(phase) {
+        const phaseDiv = document.createElement('div');
+        phaseDiv.className = 'phase';
+        phaseDiv.innerHTML = `
+            <h3>${phase.name}</h3>
+            <div class="details">
+                <h4>Folículo Dominante</h4>
+                <p>${phase.dominantFollicle}</p>
+                <h4>Folículos Não-Dominantes</h4>
+                <p>${phase.nonDominantFollicles}</p>
+                <h4>Corpo Lúteo</h4>
+                <p>${phase.corpoLuteo}</p>
+                <h4>Progesterona</h4>
+                <p>${phase.progesterona}</p>
+                <h4>Útero</h4>
+                <p>${phase.utero}</p>
+                <h4>Prostaglandina</h4>
+                <p>${phase.prostaglandina}</p>
+                <h4>Status Hormonal</h4>
+                <ul>
+                    ${Object.entries(phase.hormones).map(([hormone, status]) => 
+                        `<li><strong>${hormone}:</strong> ${status}</li>`
+                    ).join('')}
+                </ul>
+            </div>
+        `;
+        phaseDiv.addEventListener('click', function() {
+            this.querySelector('.details').style.display = 
+                this.querySelector('.details').style.display === 'none' ? 'block' : 'none';
+        });
+        return phaseDiv;
+    }
+
+    function createConceptElement(concept) {
+        const conceptDiv = document.createElement('div');
+        conceptDiv.className = 'concept';
+        conceptDiv.innerHTML = `
+            <h3>${concept.name}</h3>
+            <div class="details">
+                ${concept.details}
+            </div>
+        `;
+        conceptDiv.addEventListener('click', function() {
+            this.querySelector('.details').style.display = 
+                this.querySelector('.details').style.display === 'none' ? 'block' : 'none';
+        });
+        return conceptDiv;
+    }
+
+    const cycleContainer = document.getElementById('cycle-phases');
+    cyclePhases.forEach(phase => {
+        cycleContainer.appendChild(createPhaseElement(phase));
+    });
+
+    const conceptContainer = document.getElementById('concept-list');
+    concepts.forEach(concept => {
+        conceptContainer.appendChild(createConceptElement(concept));
+    });
+    </script>
+</body>
+</html>
